@@ -1,0 +1,294 @@
+#include<iostream>
+#include<conio.h>
+#include<time.h>
+#include<windows.h>
+
+
+
+using namespace std;
+HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+COORD CursorPosition;
+
+bool gameOver;
+int cubeY = 0;
+int cubeX = 2;
+int spikeX = 0;
+int hurdlePos = 74;
+int speed = 40;
+int gameover = 0;
+
+enum eDirection {STOP = 0, LEFT, RIGHT, JUMP};
+eDirection dir;
+
+void gotoxy(int x, int y){
+    COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+void setCursor (bool visible, DWORD size){
+    if (size == 0){
+        size = 20;
+    }
+    CONSOLE_CURSOR_INFO lpCursor;
+    lpCursor.bVisible = visible;
+    lpCursor.dwSize = size;
+    SetConsoleCursorInfo(console, & lpCursor);
+}
+
+void score(){
+    system("cls"); 
+    gameover = 0;
+    gotoxy(3, 2); cout<<"SCORE: ";
+    for (int i = 0; i < 79; i++){
+    	gotoxy(1+i, 1); cout<<"Z";
+    	gotoxy(1+i, 25); cout<<"Z";
+    }
+}
+
+void drawCube() { 
+        HANDLE h = GetStdHandle (STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute (h,6);
+     gotoxy(cubeX, 17 - cubeY);cout<<"             ";
+    gotoxy(cubeX, 18 - cubeY);cout<<"ooooooooooooo";
+    gotoxy(cubeX, 19 - cubeY);cout<<"oo         oo";
+    gotoxy(cubeX, 20 - cubeY);cout<<"oo         oo";
+    gotoxy(cubeX, 21 - cubeY);cout<<"oo";
+    gotoxy(cubeX + 11, 21 - cubeY);cout<<"oo";
+    gotoxy(cubeX, 22 - cubeY);cout<<"oo";
+    gotoxy(cubeX + 11, 22 - cubeY);cout<<"oo";
+    gotoxy(cubeX, 23 - cubeY);cout<<"oo         oo";
+    gotoxy(cubeX, 24 - cubeY);cout<<"ooooooooooooo";
+    
+        SetConsoleTextAttribute (h,3 | FOREGROUND_INTENSITY);
+    gotoxy(cubeX + 5, 20 - cubeY);cout<<"ooo";
+    gotoxy(cubeX + 5, 21 - cubeY);cout<<"ooo";
+    gotoxy(cubeX + 5, 22 - cubeY);cout<<"ooo";
+        SetConsoleTextAttribute (h,15 | FOREGROUND_INTENSITY);
+
+}
+
+
+void eraseCube(int slide = 0){
+
+	gotoxy(cubeX - 1, 17 - cubeY);cout<<" ";
+    gotoxy(cubeX - 1, 18 - cubeY);cout<<" ";
+    gotoxy(cubeX - 1, 19 - cubeY);cout<<" ";
+    gotoxy(cubeX - 1, 20 - cubeY);cout<<" ";
+    gotoxy(cubeX - 1, 21 - cubeY);cout<<" ";
+    gotoxy(cubeX - 1, 22 - cubeY);cout<<" ";
+    gotoxy(cubeX - 1, 23 - cubeY);cout<<" ";
+    gotoxy(cubeX - 1, 24 - cubeY);cout<<" ";
+    gotoxy(cubeX - 1, 25 - cubeY);
+    gotoxy(cubeX + 13, 17 - cubeY);cout<<" ";
+    gotoxy(cubeX + 13, 18 - cubeY);cout<<" ";
+    gotoxy(cubeX + 13, 19 - cubeY);cout<<" ";
+    gotoxy(cubeX + 13, 20 - cubeY);cout<<" ";
+    gotoxy(cubeX + 13, 21 - cubeY);cout<<" ";
+    gotoxy(cubeX + 13, 22 - cubeY);cout<<" ";
+    gotoxy(cubeX + 13, 23 - cubeY);cout<<" ";
+    gotoxy(cubeX + 13, 24 - cubeY);cout<<" ";
+
+    gotoxy(cubeX + 2, 20 - cubeY);cout<<"   ";
+    gotoxy(cubeX + 2, 21 - cubeY);cout<<"   ";
+    gotoxy(cubeX + 2, 22 - cubeY);cout<<"   ";
+    gotoxy(cubeX + 8, 20 - cubeY);cout<<"   ";
+    gotoxy(cubeX + 8, 21 - cubeY);cout<<"   ";
+    gotoxy(cubeX + 8, 22 - cubeY);cout<<"   ";
+}
+
+void input(){
+    if (_kbhit())
+	{
+		switch(_getch())
+		{
+			case 'a':
+				dir = LEFT;
+				break;
+			case 'd':
+				dir = RIGHT;
+				break;
+			
+			case 'A':
+				dir = LEFT;
+				break;
+			case 'D':
+				dir = RIGHT;
+				break;
+            
+			
+		}
+	}
+}
+
+void logic(){
+    switch(dir)
+	{
+		case LEFT:
+			if( cubeX > 1 ){
+				cubeX --;
+                
+            }
+			break;
+        
+		case RIGHT:
+            if( cubeX < 67 ){
+				cubeX++;
+                if (spikeX == cubeX && cubeY < 4) {
+                gotoxy(36, 8);cout<<"Game Over";
+                getch();
+                gameover = 1;
+
+            }
+                
+            }
+            break;
+        
+        Sleep(speed-39);
+        
+    }
+    
+	static int score = 0;
+    
+    gotoxy(hurdlePos - spikeX, 22);cout<<"  || ";
+    gotoxy(hurdlePos - spikeX, 23);cout<<" |  | ";
+    gotoxy(hurdlePos - spikeX, 24);cout<<"|____| ";
+
+    spikeX++;
+
+    
+
+    if (spikeX == 73) {
+        spikeX = 0;
+        score++;
+        gotoxy(11, 2);cout<<"        ";
+        gotoxy(11, 2);cout<<score;
+
+    
+    if (score > 10) {
+        speed--;
+    }
+        
+    }
+    Sleep(speed-30);
+    
+}
+
+void cubeJump(int jump = 0){
+    if (jump == 0){
+                cubeY = 0;
+            }
+            else if (jump ==2){
+                cubeY--;
+            }
+            else {
+                cubeY++;
+            }
+
+            HANDLE h = GetStdHandle (STD_OUTPUT_HANDLE);
+            SetConsoleTextAttribute (h,15 | FOREGROUND_INTENSITY);
+    
+            gotoxy(cubeX - 1, 25 - cubeY);
+            if (jump == 0){
+            cout<<"ZZZZZZZZZZZZZZZZ";
+            } 
+            else{
+            cout<<"                ";
+            }
+        Sleep(speed-35);
+
+}
+
+void play(){ 
+    drawCube();
+	system("cls");
+    char ch;
+    int i;
+	score();
+    while (true) {
+        while (!kbhit()) {
+            if( gameover==1 ){
+            	return;
+			}
+			drawCube();
+            eraseCube(0);
+            input();
+            logic();
+            cubeJump();
+            
+        }
+        ch = getch();
+        if (ch == 32) {
+        	i = 0;
+            while( i < 12) {
+                drawCube();
+                eraseCube(1);
+                input();
+                logic();
+                cubeJump(1);
+                
+                i++;
+            }
+            while(i > 0) {
+                drawCube();
+                eraseCube(2);
+                input();
+                logic();
+                cubeJump(2);
+                
+                i--;
+        	}
+        }
+		else if (ch == 'p'||ch == 'P')
+           getch();
+		else if (ch == 27)
+           break;
+    }
+    
+}
+
+void instructions() {
+	system("cls");
+	cout<<"Instructions";
+	cout<<"\n----------------";
+	cout<<"\n1. Avoid spikes by jumping.";
+	cout<<"\n2. Press 'Spacebar' to jump.";
+	cout<<"\n3. Press 'P' to pause game.";
+	cout<<"\n4. Press 'Escape' to exit from game.";
+	cout<<"\n\nPress any key to go back to menu.";
+	getch();
+}
+
+int main() {
+
+    setCursor(0, 0);
+    
+    do{
+		system("cls");
+        {
+        HANDLE h = GetStdHandle (STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute (h,4 | FOREGROUND_INTENSITY);
+		gotoxy(10,5); cout<<" -------------------------- "; 
+		gotoxy(10,6); cout<<" |";
+        gotoxy(36,6); cout<<"| ";
+		gotoxy(10,7); cout<<" -------------------------- ";
+        SetConsoleTextAttribute (h,15 | FOREGROUND_INTENSITY);
+        gotoxy(20,6); cout<<"CUBE JUMP";  
+        }
+        HANDLE h = GetStdHandle (STD_OUTPUT_HANDLE);
+        SetConsoleTextAttribute (h,15 | FOREGROUND_INTENSITY);
+		gotoxy(10,9); cout<<"1. Start Game";
+		gotoxy(10,10); cout<<"2. Instructions";	 
+		gotoxy(10,11); cout<<"3. Quit";
+		gotoxy(10,13); cout<<"Select option: ";
+		char op = getche();
+		
+		if(op=='1') play();
+		else if(op=='2') instructions();
+		else if(op=='3') exit(0);
+		
+	}while(1);
+    
+	return 0;
+}
