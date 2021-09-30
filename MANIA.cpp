@@ -14,22 +14,31 @@ HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
 int notePos[4] = {44, 49, 54, 59};
+int notePos2[2] = {54, 59};
+int notePos3[2] = {44, 49};
 int noteX;
 int noteY = 0;
+int note2X;
+int note2Y = 0;
+int note3X;
+int note3Y = 0;
+int note4X;
+int note4Y = 0;
 int combo = 0;
 int score = 0;
-int keyX = -1 + WIN_WIDTH/2;
+int keyX = 44;
 int keyY = 22;
-int key2X = 4 + WIN_WIDTH/2;
+int key2X = 49;
 int key2Y = 22;
-int key3X = 9 + WIN_WIDTH/2;
+int key3X = 54;
 int key3Y = 22;
-int key4X = 14 + WIN_WIDTH/2;
+int key4X = 59;
 int key4Y = 22;
 int color = 8;
 int color2 = 1;
 int color3 = 1;
 int color4 = 8;
+bool fall = false;
 
 void gotoxy(int x, int y){
 	CursorPosition.X = x;
@@ -51,8 +60,8 @@ void drawBorder(){
 	char brdr = 186;
 	for(int i=0; i<SCREEN_HEIGHT; i++){
 		for(int j=25; j<27; j++){
-			gotoxy(17+j,i); cout<<brdr; //left border
-			gotoxy(WIN_WIDTH-j,i); cout<<brdr; //right border
+			gotoxy(17+j,i); cout<<brdr; //LEFT BORDER
+			gotoxy(WIN_WIDTH-j,i); cout<<brdr; //RIGHT BORDER
 		}
 	} 
 
@@ -60,9 +69,9 @@ void drawBorder(){
 
 void drawNote(){
     char note = 219;
-        gotoxy(noteX, noteY - 3);cout<<"     ";
-        gotoxy(noteX, noteY - 2);cout<<"     ";
-        gotoxy(noteX, noteY - 1);
+        gotoxy(noteX, noteY);    cout<<"     ";
+        gotoxy(noteX, noteY + 1);cout<<"     ";
+        gotoxy(noteX, noteY + 2);
             for (int i = 0; i < 5; i++){
                  cout<<note;
         }
@@ -70,32 +79,85 @@ void drawNote(){
 }
 
 void eraseNote(){
-        gotoxy(noteX, noteY - 3);cout<<"     ";
-        gotoxy(noteX, noteY - 2);cout<<"     ";
-        gotoxy(noteX, noteY - 1);cout<<"     ";
+        gotoxy(noteX, noteY);    cout<<"     ";
+        gotoxy(noteX, noteY + 1);cout<<"     ";
+        gotoxy(noteX, noteY + 2);cout<<"     ";
+
+}
+
+void drawNote2(){
+    char note = 219;
+        gotoxy(note2X, note2Y);    cout<<"     ";
+        gotoxy(note2X, note2Y + 1);cout<<"     ";
+        gotoxy(note2X, note2Y + 2);
+            for (int i = 0; i < 5; i++){
+                 cout<<note;
+        }
+
+}
+
+void eraseNote2(){
+        gotoxy(note2X, note2Y);    cout<<"     ";
+        gotoxy(note2X, note2Y + 1);cout<<"     ";
+        gotoxy(note2X, note2Y + 2);cout<<"     ";
+
+}
+
+void drawNote3(){
+    char note = 219;
+        gotoxy(note3X, note3Y);    cout<<"     ";
+        gotoxy(note3X, note3Y + 1);cout<<"     ";
+        gotoxy(note3X, note3Y + 2);
+            for (int i = 0; i < 5; i++){
+                 cout<<note;
+        }
+
+}
+
+void eraseNote3(){
+        gotoxy(note3X, note3Y);    cout<<"     ";
+        gotoxy(note3X, note3Y + 1);cout<<"     ";
+        gotoxy(note3X, note3Y + 2);cout<<"     ";
+
+}
+
+void drawNote4(){
+    char note = 219;
+        gotoxy(note4X, note4Y);    cout<<"     ";
+        gotoxy(note4X, note4Y + 1);cout<<"     ";
+        gotoxy(note4X, note4Y + 2);
+            for (int i = 0; i < 5; i++){
+                 cout<<note;
+        }
+
+}
+
+void eraseNote4(){
+        gotoxy(note4X, note4Y);    cout<<"     ";
+        gotoxy(note4X, note4Y + 1);cout<<"     ";
+        gotoxy(note4X, note4Y + 2);cout<<"     ";
 
 }
 
 void drawKey(){
     char key = 178;
 	SetConsoleTextAttribute (h,color);
-
-    gotoxy(keyX, keyY);
-        for (int i = 0; i < 5; i++){
+        gotoxy(keyX, keyY);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(keyX, keyY+1);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(keyX, keyY+1);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(keyX, keyY+2);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(keyX, keyY+2);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(keyX, keyY+3);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(keyX, keyY+3);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
+            }
 		
     SetConsoleTextAttribute (h,15);
 }
@@ -103,17 +165,21 @@ void drawKey2(){
     char key = 178;
 	SetConsoleTextAttribute (h,color2);
 		gotoxy(key2X, key2Y);
-        for (int i = 0; i < 5; i++){
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(key2X, key2Y+1);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(key2X, key2Y+1);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(key2X, key2Y+2);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(key2X, key2Y+2);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
+            }
+        gotoxy(key2X, key2Y+3);
+            for (int i = 0; i < 5; i++){
+                 cout<<key;
+            }
     
     SetConsoleTextAttribute (h,15);
 }
@@ -121,17 +187,21 @@ void drawKey3(){
     char key = 178;
 	SetConsoleTextAttribute (h,color3);
 		gotoxy(key3X, key3Y);
-        for (int i = 0; i < 5; i++){
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(key3X, key3Y+1);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(key3X, key3Y+1);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(key3X, key3Y+2);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(key3X, key3Y+2);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
+            }
+        gotoxy(key3X, key3Y+3);
+            for (int i = 0; i < 5; i++){
+                 cout<<key;
+            }
     
     SetConsoleTextAttribute (h,15);
 }
@@ -139,21 +209,21 @@ void drawKey4(){
     char key = 178;
 	SetConsoleTextAttribute (h,color4);
 		gotoxy(key4X, key4Y);
-        for (int i = 0; i < 5; i++){
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(key4X, key4Y+1);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(key4X, key4Y+1);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(key4X, key4Y+2);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(key4X, key4Y+2);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
-    gotoxy(key4X, key4Y+3);
-        for (int i = 0; i < 5; i++){
+            }
+        gotoxy(key4X, key4Y+3);
+            for (int i = 0; i < 5; i++){
                  cout<<key;
-        }
+            }
     SetConsoleTextAttribute (h,15);
 }
 
@@ -166,8 +236,9 @@ void updateScore(){
 }
 
 void noteFall(){
-	noteY+=2;
-	if (noteY == 28){
+	noteY++;
+	if (noteY == 24){
+
 		eraseNote();
 		noteY = 0;
 		noteX = notePos[rand()%4]; //RANDOMIZE NOTE'S POSITION
@@ -177,17 +248,56 @@ void noteFall(){
     
 }
 
-void hitNote(){
-    if (kbhit()){
-        char ch = getch();
-            if (ch == 'd' || ch == 'D'){
+void noteFall2(){     
+    note2Y++;
+    if (note2Y == 24){
+        
+		eraseNote2();
+		note2Y = 0;
+        note2X = notePos[rand()%2]; //RANDOMIZE NOTE'S POSITION
+		combo = combo - combo;
+        updateCombo();
+	}
+    
+}
+
+void hitNote()
+{
+    if (kbhit())
+    {
+        switch(getch())
+        {
+            case 'd':
+            case 'D':
                 if (color < 14)
+                {
                     color += 7;
-                    if (noteX == keyX && noteY == keyY + 2 || noteY == keyY)
+                    if (noteX == keyX && noteY + 2 == keyY || noteY + 1 == keyY || noteY == keyY || noteY + 2 == keyY - 1 || noteY + 1 == keyY - 1 || noteY == keyY - 1)
                     {
-                        eraseNote();
+                        
+                            eraseNote();
                         noteY = 0;
                         noteX = notePos[rand()%4];
+                        combo++;
+                        updateCombo();
+                        score+=10;
+                        updateScore();
+                            if (combo > 10){
+                                score+=100;
+                                updateScore();
+                            }
+                            if (combo > 15){
+                                score+=1000;
+                                updateScore();
+                            } 
+                        
+                            
+                    }
+                    if (note2X == keyX && note2Y + 2 == keyY || note2Y + 1 == keyY || note2Y == keyY || note2Y + 2 == keyY - 1 || note2Y + 1 == keyY - 1 || note2Y == keyY - 1)
+                    {
+                            eraseNote2();
+                        note2Y = 0;
+                        note2X = notePos[rand()%2];
                         combo++;
                         updateCombo();
                         score+=10;
@@ -201,14 +311,18 @@ void hitNote(){
                             }
                         }
                     }
-	
-            }
-            else if (ch == 'f' || ch == 'F'){
+                }
+            break;
+
+            case 'f':
+            case 'F':
                 if (color2 <11)
+                {
                     color2 += 10;
-                    if (noteX == key2X && noteY == key2Y + 2 || noteY == key2Y)
+                    if (noteX == key2X && noteY + 2 == key2Y || noteY + 1 == key2Y || noteY == key2Y || noteY + 2 == key2Y - 1 || noteY + 1 == key2Y - 1 || noteY == key2Y - 1)
                     {
-                        eraseNote();
+                        
+                            eraseNote();
                         noteY = 0;
                         noteX = notePos[rand()%4];
                         combo++;
@@ -224,14 +338,37 @@ void hitNote(){
                             }
                         }
                     }
-	
-            }
-            else if (ch == 'j' || ch == 'J'){
+                    if (note2X == key2X && note2Y + 2 == key2Y || note2Y + 1 == key2Y || note2Y == key2Y || note2Y + 2 == key2Y - 1 || note2Y + 1 == key2Y - 1 || note2Y == key2Y - 1)
+                    {
+                            eraseNote2();
+                        note2Y = 0;
+                        note2X = notePos[rand()%2];
+                        combo++;
+                        updateCombo();
+                        score+=10;
+                        updateScore();
+                            if (combo > 10){
+                                score+=100;
+                                updateScore();
+                            if (combo > 15){
+                                score+=1000;
+                                updateScore();
+                            }
+                        }
+                    }
+                }
+                    
+            break;
+
+            case 'j':
+            case 'J':
                 if (color3 <11)
+                {
                     color3 += 10;
-                    if (noteX == key3X && noteY == key3Y + 2 || noteY == key3Y)
+                    if (noteX == key3X && noteY + 2 == key3Y || noteY + 1 == key3Y || noteY == key3Y || noteY + 2 == key3Y - 1 || noteY + 1 == key3Y - 1 || noteY == key3Y - 1)
                     {
-                        eraseNote();
+                        
+                            eraseNote();
                         noteY = 0;
                         noteX = notePos[rand()%4];
                         combo++;
@@ -246,15 +383,41 @@ void hitNote(){
                                 updateScore();
                             }
                         }
+                        
+                        
                     }
-	
-            }
-            else if (ch == 'k' || ch == 'K'){
+                    if (note2X == key3X && note2Y + 2 == key3Y || note2Y + 1 == key3Y || note2Y == key3Y || note2Y + 2 == key3Y - 1 || note2Y + 1 == key3Y - 1 || note2Y == key3Y - 1)
+                    {
+                            eraseNote2();
+                        note2Y = 0;
+                        note2X = notePos[rand()%2];
+                        combo++;
+                        updateCombo();
+                        score+=10;
+                        updateScore();
+                            if (combo > 10){
+                                score+=100;
+                                updateScore();
+                            if (combo > 15){
+                                score+=1000;
+                                updateScore();
+                            }
+                        }
+                    }
+                }
+                    
+            break;
+
+            case 'k':
+            case 'K':
                 if (color4 <14)
+                {
                     color4 += 7;
-                    if (noteX == key4X && noteY == key4Y + 2 || noteY == key4Y)
+                    if (noteX == key4X && noteY + 2 == key4Y || noteY + 1 == key4Y || noteY == key4Y || noteY + 2 == key4Y - 1 || noteY + 1 == key4Y - 1 || noteY == key4Y - 1)
                     {
-                        eraseNote();
+                        
+                        
+                            eraseNote();
                         noteY = 0;
                         noteX = notePos[rand()%4];
                         combo++;
@@ -269,9 +432,31 @@ void hitNote(){
                                 updateScore();
                             }
                         }
+                        
+                        
                     }
-	
-            }
+                    if (note2X == key4X && note2Y + 2 == key4Y || note2Y + 1 == key4Y || note2Y == key4Y || note2Y + 2 == key4Y - 1 || note2Y + 1 == key4Y - 1 || note2Y == key4Y - 1)
+                    {
+                            eraseNote2();
+                        note2Y = 0;
+                        note2X = notePos[rand()%2];
+                        combo++;
+                        updateCombo();
+                        score+=10;
+                        updateScore();
+                            if (combo > 10){
+                                score+=100;
+                                updateScore();
+                            if (combo > 15){
+                                score+=1000;
+                                updateScore();
+                            }
+                        }
+                    }
+                }
+            default:
+            break;       
+        }
             
     }
     else if (!kbhit()){
@@ -300,13 +485,16 @@ void play(){
     score = 0;
     noteY = 0;
     noteX = notePos[rand()%4];
+    note2Y = 0;
+    note2X = notePos[rand()%2];
+    
+
 	system("cls"); 
 	drawBorder(); 
 	updateCombo();
 	updateScore();
 
 	gotoxy(WIN_WIDTH - 10, 2);cout<<"MANIA!";
-	
 	gotoxy(51, 5);cout<<"START!";
 	getch();
 	gotoxy(51, 5);cout<<"      ";
@@ -318,14 +506,10 @@ void play(){
         drawKey4();
 		hitNote();
         drawNote();
-        char brdr = 186;
-        for(int i=0; i<SCREEN_HEIGHT; i++){
-            for(int j=25; j<27; j++){
-			gotoxy(WIN_WIDTH-j,i); cout<<brdr; //right border
-            }
-        }
-		Sleep(30);
+        drawNote2();
+        Sleep(5);
 		noteFall();
+        noteFall2();
         
 	}
 	
